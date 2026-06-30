@@ -1,0 +1,8 @@
+flowchart TD
+  U(["User 요청"]) --> API["FastAPI 백엔드"]
+  API --> AG["LLM Agent"]
+  AG --> SV["추천 서빙"]
+  SV --> OUT(["추천 결과"])
+  API --> RD[("Redis 캐시")]
+  API --> ST["Steam API · 장르/태그"]
+  API -. 실행·검증 .-> ENV[/"Docker Compose · CI"/]

@@ -1,0 +1,7 @@
+flowchart TD
+  M["도서 메타데이터 (제목·카테고리·요약)"] --> SB["SBERT 텍스트 임베딩"]
+  IMG["표지 이미지"] --> CN["CNN/ResNet 이미지 피처"]
+  SB --> FU(["피처 결합"])
+  CN --> FU
+  FU --> MD["DeepFM 등 모델"]
+  MD --> EV["RMSE 평가 · WandB"]

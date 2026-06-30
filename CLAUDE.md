@@ -72,7 +72,7 @@ gh repo clone rlaqudwn1/backend-portfolio "<scratchpad>/backend-portfolio"
 # Vercel 배포 (정적 사이트, 빌드 없음)
 #  - Framework Preset: Other
 #  - Build Command: (없음)
-#  - Output Directory: .  (Root Directory를 01-homepage/02-portfolio 로 지정)
+#  - Output Directory: .  (Root Directory = . — repo `rlaqudwn1/02-portfolio` 루트가 이 폴더)
 vercel            # 프리뷰 배포
 vercel --prod     # 프로덕션 배포
 ```
@@ -84,7 +84,7 @@ vercel --prod     # 프로덕션 배포
 | 빌드 필요 여부 | 없음 — 순수 정적(HTML/CSS/JS) → Vercel **정적 호스팅으로 즉시 가능** |
 | 서버/백엔드 의존 | 없음(mailto만 사용) → OK |
 | 외부 런타임/시크릿 | 없음 → OK |
-| Root Directory | 모노 구조라 **`01-homepage/02-portfolio`로 지정 필요** |
+| Root Directory | **standalone repo** (`rlaqudwn1/02-portfolio`) — 이 폴더가 루트이므로 **`.` 그대로** |
 | 누락 자산 | `resume.pdf` 부재 시 404 → 추가 또는 링크 제거 필요 |
 | private 소스 repo | 데이터 출처일 뿐, 정적 산출물은 자체 완결 → 배포에 무관 |
 
@@ -95,8 +95,9 @@ vercel --prod     # 프로덕션 배포
 - [x] PRD v0.4 확정 (실데이터 반영, 백엔드·AI 리포지셔닝)
 - [x] **Phase 1** 완료: backend-portfolio 분석 + 김병주 정보 확정 + Vercel 판정(가능)
 - [x] **Phase 2** 콘텐츠 전환: index/styles 실데이터 교체, `vercel.json` 추가
+- [x] **디자인 개선(v0.4.1)**: Portfolio 아키텍처 ASCII→Mermaid 사전 SVG(`diagrams/`), About 키워드 알약 통일, 모바일 닫힌 메뉴 버그 수정
 - [ ] **Phase 2** 배포: 사용자가 Vercel 로그인 후 실행 (Root Directory 지정)
-- [ ] Owner 입력 대기: 이력서 PDF·LinkedIn·프로필 사진·정량 지표·아키텍처 다이어그램
+- [ ] Owner 입력 대기: 이력서 PDF·LinkedIn·프로필 사진·정량 지표(RMSE 외) — *아키텍처 다이어그램은 markdown 기반 Mermaid SVG로 대체 생성*
 
 ## 9. 규칙 (Conventions)
 

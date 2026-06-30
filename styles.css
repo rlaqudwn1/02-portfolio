@@ -179,7 +179,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; margin: 0; }
 .about-grid { display: grid; gap: var(--s-4); grid-template-columns: 1fr; }
 .about-text p { color: var(--muted); margin: 0 0 var(--s-2); }
 .about-text strong { color: var(--text); }
-.about-tags { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-1); padding: 0; margin: 0; }
+.about-tags { list-style: none; display: flex; flex-wrap: wrap; align-content: flex-start; align-items: flex-start; gap: var(--s-1); padding: 0; margin: 0; }
 .about-tags li {
   background: var(--accent-weak); color: var(--accent);
   padding: 6px 14px; border-radius: 999px; font-size: 0.9rem; font-weight: 600;
@@ -222,14 +222,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; margin: 0; }
   padding: var(--s-2);
   overflow: auto;
 }
-.diagram {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: var(--accent);
-  white-space: pre;
-}
+.diagram { display: block; width: 100%; height: auto; margin: 0; }
 .case-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
 .case-summary { color: var(--muted); margin: 0 0 var(--s-2); }
 .case-body h4 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin: var(--s-2) 0 4px; }
@@ -292,7 +285,7 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; margin: 0; }
 
 /* ---------------- Responsive ---------------- */
 @media (min-width: 760px) {
-  .about-grid { grid-template-columns: 2fr 1fr; }
+  .about-grid { grid-template-columns: 2fr 1fr; align-items: start; }
   .case { grid-template-columns: 0.9fr 1.1fr; gap: var(--s-4); align-items: center; }
   .case-reverse .case-visual { order: 2; }
 }
@@ -307,12 +300,12 @@ h1, h2, h3 { line-height: 1.25; letter-spacing: -0.02em; margin: 0; }
     gap: 0;
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: var(--s-1) var(--s-3) var(--s-3);
+    border-bottom: 1px solid transparent;
+    padding: 0 var(--s-3);
     max-height: 0; overflow: hidden;
     transition: max-height 0.3s ease;
   }
-  .nav-links.open { max-height: 420px; }
+  .nav-links.open { max-height: 420px; padding: var(--s-1) var(--s-3) var(--s-3); border-bottom-color: var(--border); }
   .nav-links a { padding: 14px 4px; border-bottom: 1px solid var(--border); }
   .nav-cta { text-align: center; margin-top: var(--s-2); border-radius: 10px; }
 }

@@ -1,0 +1,9 @@
+flowchart TD
+  C(["Client"]) -->|REST| API["Spring Boot API"]
+  API --> D["JPA · QueryDSL → DB"]
+  API --> A["Security · JWT · OAuth2"]
+  API --> R["WebSocket/STOMP 실시간·알림"]
+  API --> X["Redis · Calendar · Firebase · Naver Search"]
+  D ~~~ A
+  A ~~~ R
+  R ~~~ X
