@@ -3,277 +3,170 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>김병주 · 백엔드·AI 개발자 포트폴리오</title>
-  <meta name="description" content="모델의 결과가 실제 서비스 흐름으로 이어지는 과정을 고민하는 백엔드·AI 개발자 김병주의 포트폴리오." />
-  <!-- Open Graph -->
-  <meta property="og:title" content="김병주 · 백엔드·AI 개발자 포트폴리오" />
+  <title>김병주 · 백엔드·AI 개발자</title>
+  <meta name="description" content="백엔드와 AI/추천 시스템을 잇는 개발자 김병주. 모델의 결과가 실제 서비스 흐름으로 이어지게 합니다." />
+  <meta property="og:title" content="김병주 · 백엔드·AI 개발자" />
   <meta property="og:description" content="모델의 결과가 실제 서비스 흐름으로 이어지게 하는 백엔드·AI 개발자." />
   <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- 시스템 모티프 배경 + 커서 잔상 -->
-  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <!-- 아이콘 스프라이트 -->
+  <svg class="sprite" aria-hidden="true" width="0" height="0">
+    <defs>
+      <symbol id="i-trigger" viewBox="0 0 24 24"><path d="M13 2 5 13h6l-2 9 10-13h-6z" fill="#9a9488"/></symbol>
+      <symbol id="i-journey" viewBox="0 0 24 24" fill="none" stroke="#9a9488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.4"/><circle cx="18" cy="18" r="2.4"/><path d="M6 8.4V14a4 4 0 0 0 4 4h5.6"/></symbol>
+      <symbol id="i-project" viewBox="0 0 24 24" fill="none" stroke="#9a9488" stroke-width="1.7" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M3.5 9.5h17"/></symbol>
+      <symbol id="i-output" viewBox="0 0 24 24" fill="none" stroke="#9a9488" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13"/><path d="M12 6l6 6-6 6"/></symbol>
+    </defs>
+  </svg>
 
-  <!-- 네비게이션 -->
-  <header class="nav" id="top">
-    <div class="nav-inner">
-      <a href="#hero" class="nav-logo">BJ<span>.</span></a>
-      <button class="nav-toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="nav-links">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="nav-links" id="nav-links" aria-label="주요 섹션">
-        <a href="#about">About</a>
-        <a href="#skills">Skills</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#contact" class="nav-cta">Contact</a>
-      </nav>
+  <div class="stage" id="stage">
+    <div class="canvas" id="canvas">
+      <svg class="wires" id="wires" aria-hidden="true"></svg>
+
+      <!-- ===== TRIGGER · 소개 ===== -->
+      <section class="node node--trigger" id="trg_intro" data-col="0" data-row="0" style="--w:440px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-trigger"/></svg>TRIGGER</span>
+          <span class="node__id">trg_intro</span>
+        </div>
+        <h1 class="node__name">김병주.</h1>
+        <p class="lead">백엔드 · AI 개발자. 취업 준비 중, 함께 일할 팀을 찾고 있습니다.</p>
+        <p class="lead lead--ink">모델의 결과가 실제 서비스 흐름으로 이어지게 만드는 일을 합니다.</p>
+        <ul class="chips">
+          <li>Python</li><li>Java</li><li>Spring Boot</li><li>FastAPI</li><li>PyTorch</li>
+          <li>scikit-learn</li><li>SQL</li><li>Docker</li><li>Git</li>
+        </ul>
+        <pre class="code" aria-label="자기소개 코드 블록">{
+  status  : <span class="c-s">"취업 준비 중"</span>,
+  program : <span class="c-s">"부스트캠프 AI Tech 8기"</span>,
+  focus   : <span class="c-s">"백엔드 · AI · 추천"</span>,
+  based_in: <span class="c-s">"Korea"</span>
+}
+<span class="c-cm">// 아래 프로젝트는 모두 팀 · 내 기여 중심</span></pre>
+      </section>
+
+      <!-- ===== JOURNEY · 부트캠프 여정 ===== -->
+      <section class="node node--journey" id="jny_boostcamp" data-col="1" data-row="0" style="--w:300px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-journey"/></svg>JOURNEY</span>
+          <span class="node__id">jny_boostcamp</span>
+        </div>
+        <h2 class="node__title">부트캠프 여정</h2>
+        <ol class="timeline">
+          <li>
+            <span class="timeline__dot"></span>
+            <div class="timeline__t">부스트캠프 AI Tech 8기</div>
+            <div class="timeline__s">추천 시스템 트랙 수료</div>
+          </li>
+          <li>
+            <span class="timeline__dot"></span>
+            <div class="timeline__t">ML · 백엔드 실전</div>
+            <div class="timeline__s">데이터 전처리부터 서빙까지</div>
+          </li>
+          <li>
+            <span class="timeline__dot"></span>
+            <div class="timeline__t">Book Rating 대회</div>
+            <div class="timeline__s">텍스트·이미지 피처 결합</div>
+          </li>
+          <li>
+            <span class="timeline__dot timeline__dot--fill"></span>
+            <div class="timeline__t">팀 프로젝트 4건 →</div>
+            <div class="timeline__s">내 기여 중심으로 정리</div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ===== PROJECT · TailorPlay ===== -->
+      <section class="node node--project" id="prj_tailorplay" data-col="2" data-row="0" style="--w:430px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-project"/></svg>PROJECT</span>
+          <span class="node__id">prj_tailorplay</span>
+        </div>
+        <h2 class="node__ptitle">TailorPlay</h2>
+        <p class="pdesc">LLM 기반 Steam 게임 추천. 자연어 요청에서 추천 목록까지 end-to-end로 이어지는 파이프라인을 백엔드·실행환경 쪽에서 맡았습니다.</p>
+        <ul class="chips"><li>Python</li><li>FastAPI</li><li>OpenAI</li><li>LLM</li><li>Steam API</li></ul>
+        <div class="preview"><span class="preview__tag">preview · tailorplay</span></div>
+        <div class="pfoot">
+          <div class="metas"><span class="meta">team</span><span class="meta">데모 완성</span></div>
+          <a class="more" href="https://github.com/rlaqudwn1" target="_blank" rel="noopener">details →</a>
+        </div>
+      </section>
+
+      <!-- ===== PROJECT · Book Rating ===== -->
+      <section class="node node--project" id="prj_bookrating" data-col="2" data-row="1" style="--w:430px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-project"/></svg>PROJECT</span>
+          <span class="node__id">prj_bookrating</span>
+        </div>
+        <h2 class="node__ptitle">Book Rating Prediction</h2>
+        <p class="pdesc">도서 평점 예측 대회. 텍스트·이미지 피처를 결합하는 실험을 설계하고 앙상블을 구성해, 피처 스케일 불균형 문제를 정규화로 개선했습니다.</p>
+        <ul class="chips"><li>PyTorch</li><li>scikit-learn</li><li>Pandas</li><li>Ensemble</li></ul>
+        <div class="preview"><span class="preview__tag">preview · leaderboard</span></div>
+        <div class="pfoot">
+          <div class="metas"><span class="meta">team</span><span class="meta">실험·앙상블</span></div>
+          <a class="more" href="https://github.com/rlaqudwn1" target="_blank" rel="noopener">details →</a>
+        </div>
+      </section>
+
+      <!-- ===== PROJECT · PublicPlus ===== -->
+      <section class="node node--project" id="prj_publicplus" data-col="2" data-row="2" style="--w:430px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-project"/></svg>PROJECT</span>
+          <span class="node__id">prj_publicplus</span>
+        </div>
+        <h2 class="node__ptitle">PublicPlus</h2>
+        <p class="pdesc">Spring Boot 기반 공공시설 정보 API. 공공데이터를 연동하고, 응답 형식 불일치를 DTO 매핑 계층으로 표준화해 조회·필터 기능을 갖춘 서버를 구축했습니다.</p>
+        <ul class="chips"><li>Java</li><li>Spring Boot</li><li>REST API</li><li>공공데이터</li></ul>
+        <div class="preview"><span class="preview__tag">preview · api docs</span></div>
+        <div class="pfoot">
+          <div class="metas"><span class="meta">team</span><span class="meta">API 구축</span></div>
+          <a class="more" href="https://github.com/rlaqudwn1" target="_blank" rel="noopener">details →</a>
+        </div>
+      </section>
+
+      <!-- ===== PROJECT · Movie (brief) ===== -->
+      <section class="node node--project node--brief" id="prj_movie" data-col="2" data-row="3" style="--w:430px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-project"/></svg>PROJECT</span>
+          <span class="node__id">prj_movie</span>
+        </div>
+        <h2 class="node__ptitle">Movie Recommendation</h2>
+        <p class="pdesc">협업 필터링 기반 영화 추천 실험. 데이터 전처리와 평가 지표 설계를 맡아 추천 성능을 정량적으로 비교했습니다.</p>
+        <div class="pfoot pfoot--brief">
+          <div class="metas"><span class="chip-inline">Python</span><span class="chip-inline">Pandas</span><span class="meta">team</span></div>
+        </div>
+      </section>
+
+      <!-- ===== OUTPUT · 연락처 ===== -->
+      <section class="node node--output" id="out_contact" data-col="3" data-row="0" style="--w:440px">
+        <div class="node__head">
+          <span class="node__type"><svg class="ico"><use href="#i-output"/></svg>OUTPUT</span>
+          <span class="node__id">out_contact</span>
+        </div>
+        <h2 class="node__otitle">연락하기.</h2>
+        <div class="mailrow">
+          <a class="mail" href="mailto:rlaqudwn123456@gmail.com" data-no-pan>rlaqudwn123456@gmail.com</a>
+          <button class="copybtn" type="button" data-copy="rlaqudwn123456@gmail.com" data-no-pan>copy</button>
+        </div>
+        <p class="lead lead--ink">함께 성장할 팀을 찾고 있습니다. 신입으로서 배우며 오래 기여하고 싶습니다.</p>
+        <p class="lead">보통 하루 안에(평일 기준) 답장드립니다.</p>
+        <div class="infobox">관심 분야: 백엔드 · AI · 추천 시스템 · 데이터 파이프라인.<br />모델과 서비스를 잇는 연결부에 강점이 있습니다.</div>
+        <div class="pfoot">
+          <a class="more more--ink" href="https://github.com/rlaqudwn1" target="_blank" rel="noopener" data-no-pan>GitHub → rlaqudwn1</a>
+          <span class="copyright">© 2026 김병주</span>
+        </div>
+      </section>
     </div>
-  </header>
 
-  <main>
-    <!-- 1. HERO -->
-    <section id="hero" class="hero">
-      <div class="container hero-inner">
-        <p class="hero-eyebrow reveal">Backend · AI Engineer · 취업 준비 중</p>
-        <h1 class="hero-title reveal">
-          모델의 결과가<br />
-          <span class="accent">실제 서비스 흐름</span>으로<br />
-          이어지게 합니다
-        </h1>
-        <p class="hero-sub reveal">
-          김병주 · 백엔드와 AI/추천 시스템을 잇고, 모델이 신뢰할 수 있게 동작하는 흐름을 고민합니다.
-        </p>
-        <p class="hero-trust reveal">부스트캠프 AI Tech 8 · Book Rating Prediction <strong>RMSE 기준 3위</strong></p>
-        <div class="hero-cta reveal">
-          <a href="#portfolio" class="btn btn-primary">프로젝트 보기</a>
-          <a href="https://github.com/rlaqudwn1" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-      <a href="#about" class="scroll-indicator" aria-label="아래로 스크롤">
-        <span class="mouse"></span>
-        <span class="scroll-text">Scroll</span>
-      </a>
-    </section>
-
-    <!-- 2. ABOUT -->
-    <section id="about" class="section">
-      <div class="container">
-        <p class="section-label reveal">01 — About</p>
-        <h2 class="section-title reveal">동작하는 것과 신뢰할 수 있게 동작하는 것</h2>
-        <div class="about-grid">
-          <div class="about-text">
-            <p class="reveal">
-              LLM 기반 추천 서비스와 추천 시스템 실험을 진행하며, 기능이 동작하는 것과
-              <strong>신뢰할 수 있게 동작하는 것은 다르다</strong>는 점을 경험했습니다. 모델 응답 형식,
-              추천 서비스 호출, 데이터 저장소, 캐시, Docker 실행 환경, CI 검증이 하나의 흐름으로
-              이어질 때 서비스는 더 안정적으로 동작합니다.
-            </p>
-            <p class="reveal">
-              모델을 실험하는 데서 멈추지 않고, <strong>왜 동작하는지·어디서 실패할 수 있는지·
-              다시 검증할 수 있는지</strong>를 설명할 수 있는 백엔드·AI 개발자로 성장하고 있습니다.
-            </p>
-
-            <h3 class="edu-title reveal">Education</h3>
-            <ul class="edu-list reveal">
-              <li>
-                <div class="edu-head"><b>단국대학교 컴퓨터공학과</b><span>재학</span></div>
-                <p>컴퓨터공학 전공을 기반으로 백엔드 서비스와 AI/추천 시스템 구현 역량을 쌓고 있습니다.</p>
-              </li>
-              <li>
-                <div class="edu-head"><b>클라우드 기반 백엔드 엔지니어링 데브코스</b><span>프로그래머스</span></div>
-                <p>Spring Boot 기반 API, 인증/인가, 데이터 접근, 외부 연동, 실시간 기능을 다루었습니다.</p>
-              </li>
-              <li>
-                <div class="edu-head"><b>부스트캠프 AI Tech 8기</b><span>네이버 커넥트재단</span></div>
-                <p>추천 시스템 실험, LLM 기반 서비스, 모델 평가와 실험 관리 흐름을 경험했습니다.</p>
-              </li>
-            </ul>
-          </div>
-          <ul class="about-tags reveal" aria-label="핵심 키워드">
-            <li>#추천시스템</li>
-            <li>#LLM서비스</li>
-            <li>#백엔드API</li>
-            <li>#실험재현</li>
-            <li>#실행환경검증</li>
-            <li>#캐시설계</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. SKILLS -->
-    <section id="skills" class="section section-alt">
-      <div class="container">
-        <p class="section-label reveal">02 — Skills</p>
-        <h2 class="section-title reveal">기술 스택 &amp; 사용 경험</h2>
-        <p class="section-desc reveal">별점 대신, 무엇을 어떤 맥락에서 썼는지로 적었습니다.</p>
-
-        <div class="skills-grid">
-          <article class="skill-card reveal">
-            <h3>Backend</h3>
-            <ul>
-              <li><b>Spring Boot</b> — 공공시설 검색·활동·커뮤니티 백엔드 API 구현</li>
-              <li><b>JPA · QueryDSL</b> — 조건 기반 조회·도메인 데이터 접근 정리</li>
-              <li><b>Security · JWT · OAuth2</b> — 인증/인가 흐름 구성</li>
-              <li><b>Redis</b> — 인증·세션 상태 보조, 반복 요청 캐시</li>
-              <li><b>WebSocket · STOMP</b> — 실시간 통신 기능 지원</li>
-            </ul>
-          </article>
-          <article class="skill-card reveal">
-            <h3>AI · RecSys</h3>
-            <ul>
-              <li><b>PyTorch · SBERT</b> — 도서 메타데이터(제목·카테고리·요약) 텍스트 임베딩</li>
-              <li><b>CNN / ResNet</b> — 표지 이미지 분기 처리(텍스트와 별도 경로 결합)</li>
-              <li><b>DeepFM · XGBoost · LightGBM</b> — 추천 모델 비교·재랭킹 실험</li>
-              <li><b>LightGCN · S3Rec · EASE · MultiVAE</b> — 후보 생성(retrieval) 모델 비교</li>
-              <li><b>FastAPI · LLM Agent</b> — LLM 추천 서비스 백엔드·응답 경계 정리</li>
-              <li><b>WandB · Stratified K-Fold</b> — 실험 기록·분할 관리로 재현성 확보</li>
-            </ul>
-          </article>
-          <article class="skill-card reveal">
-            <h3>Infra · DevOps</h3>
-            <ul>
-              <li><b>Docker Compose</b> — 백엔드·DB·Redis·모델 서빙 함께 실행</li>
-              <li><b>GitHub Actions</b> — 로컬/CI 환경 차이 검증</li>
-              <li><b>외부 연동</b> — Naver Search · Google Calendar · Firebase 기능 연동</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. PORTFOLIO -->
-    <section id="portfolio" class="section">
-      <div class="container">
-        <p class="section-label reveal">03 — Portfolio</p>
-        <h2 class="section-title reveal">대표 프로젝트</h2>
-        <p class="section-desc reveal">
-          문제 → 설계 → 트러블슈팅 → 결과 순서로 정리했습니다. (모두 팀 프로젝트)
-        </p>
-
-        <!-- 케이스 1: TailorPlay -->
-        <article class="case reveal">
-          <div class="case-visual">
-            <img class="diagram" src="diagrams/tailorplay.svg" alt="TailorPlay 아키텍처: User 요청이 FastAPI 백엔드로 들어가 LLM Agent와 추천 서빙으로 이어지고, Redis 캐시·Steam API를 연동하며 Docker Compose·CI로 실행 환경을 검증하는 흐름.">
-          </div>
-          <div class="case-body">
-            <h3 class="case-title">TailorPlay</h3>
-            <p class="case-summary">LLM 기반 Steam 게임 추천 서비스에서 백엔드와 실행 환경을 연결.</p>
-
-            <h4>문제</h4>
-            <p>LLM Agent의 호출 조건·응답 형식이 흔들리고, 로컬에선 되던 기능이 Docker·CI 환경에선 다르게 실패했습니다. 모델·추천 서비스·데이터·실행 환경을 하나의 안정적 흐름으로 묶어야 했습니다.</p>
-            <h4>나의 역할(팀)</h4>
-            <p>백엔드와 실행 환경 연결 담당 — LLM Agent와 추천 서비스 사이 <strong>응답 경계 정리</strong>, 컨테이너·CI 구성.</p>
-            <h4>트러블슈팅</h4>
-            <p>Steam API·추천 서빙·저장소 경로를 역할별로 분리해 요청 흐름을 단순화. 로컬↔CI 차이로 인한 실패는 Docker Compose로 구성요소를 함께 실행하고 GitHub Actions 검증을 연결해 원인을 좁혔습니다.</p>
-            <h4>결과 &amp; 배운 점</h4>
-            <p>반복 요청·세션 상태는 Redis 캐시로 보조하되, <em>AI 기능의 안정성은 모델 호출이 아니라 데이터·캐시·실행 환경의 경계에서 결정된다</em>는 점을 배웠습니다.</p>
-
-            <ul class="case-stack">
-              <li>FastAPI</li><li>LLM Agent</li><li>Steam API</li><li>Redis</li><li>Docker Compose</li><li>GitHub Actions</li>
-            </ul>
-            <div class="case-links">
-              <a href="https://github.com/boostcampaitech8/pro-recsys-finalproject-recsys-05" target="_blank" rel="noopener">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 케이스 2: Book Rating Prediction -->
-        <article class="case case-reverse reveal">
-          <div class="case-visual">
-            <img class="diagram" src="diagrams/book-rating.svg" alt="Book Rating Prediction 아키텍처: 도서 메타데이터는 SBERT 텍스트 임베딩, 표지 이미지는 CNN/ResNet 피처로 처리해 결합한 뒤 DeepFM 등 모델로 학습하고 RMSE·WandB로 평가하는 흐름.">
-          </div>
-          <div class="case-body">
-            <h3 class="case-title">Book Rating Prediction <span class="case-badge">RMSE 3위</span></h3>
-            <p class="case-summary">도서 평점 예측 competition에서 텍스트·이미지 피처를 결합.</p>
-
-            <h4>문제</h4>
-            <p>도서 평점 예측에서 제목·요약 같은 텍스트와 표지 이미지 등 <strong>이질적인 피처를 어떻게 결합</strong>하고, 실험을 재현 가능하게 비교할지가 과제였습니다.</p>
-            <h4>나의 역할(팀)</h4>
-            <p>텍스트·이미지 피처 결합과 실험 관리 흐름 담당.</p>
-            <h4>트러블슈팅</h4>
-            <p>SBERT로 메타데이터 의미 정보를 임베딩하고 표지 이미지는 CNN/ResNet 분기로 별도 처리해 결합. Stratified K-Fold로 분할을 관리하고 WandB로 설정·결과를 기록해 모델별 비교를 재현 가능하게 만들었습니다.</p>
-            <h4>결과 &amp; 배운 점</h4>
-            <p><strong>RMSE 기준 3위</strong>(네이버 커넥트재단 주관). 추천 문제를 <em>한 번의 점수가 아니라 반복 검증의 대상</em>으로 다루는 법을 익혔습니다.</p>
-
-            <ul class="case-stack">
-              <li>PyTorch</li><li>SBERT</li><li>CNN/ResNet</li><li>DeepFM</li><li>WandB</li><li>Stratified K-Fold</li>
-            </ul>
-            <div class="case-links">
-              <a href="https://github.com/boostcampaitech8/pro-recsys-bookratingprediction-recsys-05" target="_blank" rel="noopener">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 케이스 3: PublicPlus -->
-        <article class="case reveal">
-          <div class="case-visual">
-            <img class="diagram" src="diagrams/publicplus.svg" alt="PublicPlus 아키텍처: Client가 REST로 Spring Boot API에 접근하고 JPA·QueryDSL→DB 조회, Security·JWT·OAuth2 인증, WebSocket/STOMP 실시간, Redis·Calendar·Firebase·Naver Search 외부 연동으로 구성된 흐름.">
-          </div>
-          <div class="case-body">
-            <h3 class="case-title">PublicPlus</h3>
-            <p class="case-summary">Spring Boot 기반 공공시설 검색·활동 참여·커뮤니티 백엔드 API.</p>
-
-            <h4>문제</h4>
-            <p>공공시설 검색·활동 모집/참여·커뮤니티를 하나의 백엔드로 묶되, 인증·실시간·외부 연동을 <strong>서비스 기능에 맞게 연결</strong>해야 했습니다.</p>
-            <h4>나의 역할(팀)</h4>
-            <p>백엔드 API 구현 — 조회·인증·외부 연동 흐름 구성.</p>
-            <h4>트러블슈팅</h4>
-            <p>JPA·QueryDSL로 조건 기반 조회와 도메인 접근을 정리하고, Naver Search 같은 외부 검색은 서비스 계층에서 분리해 관리. Security/JWT/OAuth2로 인증을, Redis로 상태성 데이터를 보조하고 WebSocket/STOMP·Calendar·Firebase로 실시간/알림 기능을 연결했습니다.</p>
-            <h4>결과 &amp; 배운 점</h4>
-            <p>외부 연동과 실시간 기능을 <em>서비스 계층 단위로 분리</em>할수록 변경·확장이 쉬워진다는 점을 체감했습니다.</p>
-
-            <ul class="case-stack">
-              <li>Spring Boot</li><li>JPA</li><li>QueryDSL</li><li>Security/JWT</li><li>WebSocket</li><li>Redis</li>
-            </ul>
-            <div class="case-links">
-              <a href="https://github.com/prgrms-web-devcourse-final-project/WEB1_2_PublicPlus_BE" target="_blank" rel="noopener">GitHub ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <!-- 그 외 프로젝트 (간략) -->
-        <h3 class="subsection-title reveal">그 외 프로젝트</h3>
-        <div class="projects-brief">
-          <article class="case-brief reveal">
-            <h4 class="brief-title">Movie Recommendation</h4>
-            <p class="brief-desc">후보 생성과 재랭킹을 분리해 영화 추천 파이프라인을 실험. 추천 시스템을 retrieval/ranking 단계 관점에서 정리했습니다.</p>
-            <ul class="case-stack">
-              <li>LightGCN</li><li>S3Rec</li><li>EASE</li><li>MultiVAE</li><li>DeepFM</li><li>XGBoost</li>
-            </ul>
-            <div class="case-links">
-              <a href="https://github.com/boostcampaitech8/pro-recsys-movierecommendation-recsys-05" target="_blank" rel="noopener">GitHub ↗</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. CONTACT -->
-    <section id="contact" class="section section-alt">
-      <div class="container contact-inner">
-        <p class="section-label reveal">04 — Contact</p>
-        <h2 class="section-title reveal">함께 일할 기회를 찾고 있습니다</h2>
-        <p class="section-desc reveal">백엔드·AI 어느 쪽이든, 편하게 연락 주세요.</p>
-        <div class="contact-links reveal">
-          <a href="mailto:rlaqudwn123456@gmail.com" class="btn btn-primary">이메일 보내기</a>
-          <a href="https://github.com/rlaqudwn1" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <p>© 2026 김병주 (Kim Byeongju). Built with HTML · CSS · JS.</p>
-      <div class="footer-links">
-        <a href="mailto:rlaqudwn123456@gmail.com">Email</a>
-        <a href="https://github.com/rlaqudwn1" target="_blank" rel="noopener">GitHub</a>
-        <a href="#top" class="to-top">맨 위로 ↑</a>
-      </div>
-    </div>
-  </footer>
+    <div class="brand" aria-hidden="true">BJ.</div>
+    <div class="hint" aria-hidden="true">drag to pan · 소개 → 부트캠프 여정 → 프로젝트 → 연락처</div>
+  </div>
 
   <script src="main.js" defer></script>
 </body>

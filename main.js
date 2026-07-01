@@ -1,218 +1,189 @@
 /* ============================================================
-   포트폴리오 인터랙션
-   - 모바일 네비 토글
-   - 스크롤 인뷰 애니메이션 + 활성 섹션 하이라이트
-   - 시스템 모티프 배경(노드 네트워크) + 커서 추적 잔상
-   순수 JS · 외부 의존성 없음
+   노드 그래프 캔버스 — Claude Design v2 매칭 + 자동 레이아웃
+   - layout(): 카드를 data-col(열)·data-row(순서)로 자동 배치, 캔버스 크기 자동 계산
+   - draw():   베지어 연결선 + 이중원 앰버 점 (카드 위치 실측)
+   - 드래그-투-팬 / 이메일 복사
+   카드 추가법은 EXTENDING.md 참고. 순수 바닐라 JS.
    ============================================================ */
 (function () {
   "use strict";
 
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var stage = document.getElementById("stage");
+  var canvas = document.getElementById("canvas");
+  var svg = document.getElementById("wires");
+  if (!stage || !canvas || !svg) return;
 
-  /* ---------------- 모바일 네비 토글 ---------------- */
-  const navToggle = document.querySelector(".nav-toggle");
-  const navLinks = document.querySelector(".nav-links");
+  var NS = "http://www.w3.org/2000/svg";
+  var nodes = Array.prototype.slice.call(canvas.querySelectorAll(".node"));
+  var wideMQ = window.matchMedia("(min-width: 861px)");
 
-  if (navToggle && navLinks) {
-    navToggle.addEventListener("click", function () {
-      const open = navLinks.classList.toggle("open");
-      navToggle.setAttribute("aria-expanded", String(open));
-    });
-    navLinks.querySelectorAll("a").forEach(function (a) {
-      a.addEventListener("click", function () {
-        navLinks.classList.remove("open");
-        navToggle.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
+  /* ---------------- 레이아웃 노브 ---------------- */
+  var LEFT_PAD = 60, RIGHT_PAD = 60, V_PAD = 60, COL_GAP = 130, ROW_GAP = 40;
 
-  /* ---------------- 활성 섹션 하이라이트 ---------------- */
-  const sections = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
-  const navLinkFor = function (id) {
-    return document.querySelector('.nav-links a[href="#' + id + '"]');
-  };
-  if ("IntersectionObserver" in window) {
-    const navObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            document.querySelectorAll(".nav-links a").forEach(function (a) {
-              a.classList.remove("active");
-            });
-            const link = navLinkFor(e.target.id);
-            if (link) link.classList.add("active");
-          }
-        });
-      },
-      { rootMargin: "-45% 0px -50% 0px" }
-    );
-    sections.forEach(function (s) { navObserver.observe(s); });
+  /* ---------------- 연결 (from-id, side, to-id, side) ---------------- */
+  var LINKS = [
+    ["trg_intro", "right", "jny_boostcamp", "left"],
+    ["jny_boostcamp", "right", "prj_tailorplay", "left"],
+    ["jny_boostcamp", "right", "prj_bookrating", "left"],
+    ["jny_boostcamp", "right", "prj_publicplus", "left"],
+    ["jny_boostcamp", "right", "prj_movie", "left"],
+    ["prj_tailorplay", "right", "out_contact", "left"],
+    ["prj_bookrating", "right", "out_contact", "left"],
+    ["prj_publicplus", "right", "out_contact", "left"],
+    ["prj_movie", "right", "out_contact", "left"]
+  ];
 
-    /* ---------------- 인뷰 등장 애니메이션 ---------------- */
-    const revealObserver = new IntersectionObserver(
-      function (entries, obs) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add("visible");
-            obs.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    document.querySelectorAll(".reveal").forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
-  }
+  function n(v) { return Math.round(v * 10) / 10; }
 
   /* ============================================================
-     시스템 모티프 배경 + 커서 잔상 (2D Canvas)
+     자동 레이아웃 — 열(data-col)로 묶고, 열마다 세로로 쌓아 배치.
+     각 열은 세로 중앙 정렬. 캔버스 크기는 내용에서 계산.
      ============================================================ */
-  const canvas = document.getElementById("bg-canvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
+  function layout() {
+    if (!wideMQ.matches) {
+      // 좁은 화면: JS 배치 해제 → CSS 세로 스택이 담당
+      nodes.forEach(function (el) { el.style.left = ""; el.style.top = ""; });
+      canvas.style.width = ""; canvas.style.height = "";
+      return;
+    }
 
-  const ACCENT = "37, 99, 235";
-  const animate = !prefersReduced;   // 모션 비선호 시 정지(1프레임)
-  const enableTrail = animate && canHover; // 잔상은 데스크톱 + 모션 허용 시
+    var cols = {};
+    nodes.forEach(function (el) {
+      var c = +(el.getAttribute("data-col") || 0);
+      (cols[c] = cols[c] || []).push(el);
+    });
+    var keys = Object.keys(cols).map(Number).sort(function (a, b) { return a - b; });
 
-  let w = 0, h = 0, dpr = 1;
-  let nodes = [];
-  let trail = [];
-  let rafId = null;
-  let running = false;
-
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.width = Math.floor(w * dpr);
-    canvas.height = Math.floor(h * dpr);
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    initNodes();
-    if (!animate) drawScene(); // 정적 1회 렌더
-  }
-
-  function initNodes() {
-    // 화면 면적에 비례하되 상한을 둬 성능 보호
-    const count = Math.max(18, Math.min(70, Math.round((w * h) / 20000)));
-    const speed = 0.22;
-    nodes = [];
-    for (let i = 0; i < count; i++) {
-      nodes.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * speed,
-        vy: (Math.random() - 0.5) * speed,
+    var colW = {}, colH = {};
+    keys.forEach(function (c) {
+      cols[c].sort(function (a, b) {
+        return (+(a.getAttribute("data-row") || 0)) - (+(b.getAttribute("data-row") || 0));
       });
-    }
+      var w = 0, h = 0;
+      cols[c].forEach(function (el, i) {
+        w = Math.max(w, el.offsetWidth);
+        h += el.offsetHeight + (i > 0 ? ROW_GAP : 0);
+      });
+      colW[c] = w; colH[c] = h;
+    });
+
+    var contentH = 0;
+    keys.forEach(function (c) { contentH = Math.max(contentH, colH[c]); });
+
+    var x = LEFT_PAD, colX = {};
+    keys.forEach(function (c) { colX[c] = x; x += colW[c] + COL_GAP; });
+
+    canvas.style.width = (x - COL_GAP + RIGHT_PAD) + "px";
+    canvas.style.height = (contentH + V_PAD * 2) + "px";
+
+    keys.forEach(function (c) {
+      var y = V_PAD + (contentH - colH[c]) / 2;   // 열 세로 중앙 정렬
+      cols[c].forEach(function (el) {
+        el.style.left = colX[c] + "px";
+        el.style.top = Math.round(y) + "px";
+        y += el.offsetHeight + ROW_GAP;
+      });
+    });
   }
 
-  function drawScene() {
-    ctx.clearRect(0, 0, w, h);
-    const LINK = 130;
+  /* ---------------- 연결선 렌더 ---------------- */
+  function groups() {
+    var g = {};
+    function add(id, s) { var k = id + "|" + s; (g[k] = g[k] || { total: 0 }).total++; }
+    LINKS.forEach(function (l) { add(l[0], l[1]); add(l[2], l[3]); });
+    return g;
+  }
+  function anchor(el, side, frac) {
+    var r = el.getBoundingClientRect(), c = canvas.getBoundingClientRect();
+    var x = r.left - c.left, y = r.top - c.top;
+    if (side === "left") return [x, y + r.height * frac];
+    if (side === "right") return [x + r.width, y + r.height * frac];
+    if (side === "top") return [x + r.width * frac, y];
+    return [x + r.width * frac, y + r.height];
+  }
+  function bez(a, b, fs, ts) {
+    var sx = a[0], sy = a[1], ex = b[0], ey = b[1];
+    var k = Math.max(24, Math.min(90, Math.abs(ex - sx) * 0.45));
+    var sd = fs === "right" ? 1 : -1, ed = ts === "left" ? -1 : 1;
+    return "M" + n(sx) + " " + n(sy) + " C" + n(sx + sd * k) + " " + n(sy) +
+      " " + n(ex + ed * k) + " " + n(ey) + " " + n(ex) + " " + n(ey);
+  }
+  function dot(pt) {
+    var out = [];
+    [["wire-dot-o", 5.5], ["wire-dot-i", 3.4]].forEach(function (d) {
+      var c = document.createElementNS(NS, "circle");
+      c.setAttribute("cx", n(pt[0])); c.setAttribute("cy", n(pt[1]));
+      c.setAttribute("r", d[1]); c.setAttribute("class", d[0]);
+      out.push(c);
+    });
+    return out;
+  }
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (!wideMQ.matches) return;
+    svg.setAttribute("viewBox", "0 0 " + canvas.scrollWidth + " " + canvas.scrollHeight);
 
-    // 노드 위치 갱신 (정적 모드에선 호출 안 함)
-    // 연결선
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < LINK) {
-          ctx.strokeStyle = "rgba(" + ACCENT + "," + ((1 - d / LINK) * 0.10).toFixed(3) + ")";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-    }
-    // 노드 점
-    ctx.fillStyle = "rgba(" + ACCENT + ", 0.30)";
-    for (let k = 0; k < nodes.length; k++) {
-      ctx.beginPath();
-      ctx.arc(nodes[k].x, nodes[k].y, 1.6, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    var g = groups(), seen = {}, dots = [];
+    LINKS.forEach(function (l) {
+      var from = document.getElementById(l[0]), to = document.getElementById(l[2]);
+      if (!from || !to) return;
+      var fk = l[0] + "|" + l[1], tk = l[2] + "|" + l[3];
+      seen[fk] = (seen[fk] || 0) + 1; seen[tk] = (seen[tk] || 0) + 1;
+      var a = anchor(from, l[1], seen[fk] / (g[fk].total + 1));
+      var b = anchor(to, l[3], seen[tk] / (g[tk].total + 1));
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("d", bez(a, b, l[1], l[3])); p.setAttribute("class", "wire");
+      svg.appendChild(p);
+      dots.push(a, b);
+    });
+    dots.forEach(function (pt) { dot(pt).forEach(function (el) { svg.appendChild(el); }); });
   }
 
-  function step() {
-    // 노드 이동
-    for (let i = 0; i < nodes.length; i++) {
-      const n = nodes[i];
-      n.x += n.vx;
-      n.y += n.vy;
-      if (n.x < 0 || n.x > w) n.vx *= -1;
-      if (n.y < 0 || n.y > h) n.vy *= -1;
-    }
-    drawScene();
-
-    // 커서 잔상
-    if (enableTrail) {
-      for (let i = trail.length - 1; i >= 0; i--) {
-        const p = trail[i];
-        p.life -= 1;
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.life <= 0) { trail.splice(i, 1); continue; }
-        const alpha = (p.life / p.max) * 0.5;
-        ctx.fillStyle = "rgba(" + ACCENT + "," + alpha.toFixed(3) + ")";
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    rafId = window.requestAnimationFrame(step);
+  /* ---------------- 렌더 파이프라인 ---------------- */
+  var panInit = false;
+  function render() {
+    layout();
+    draw();
+    if (!panInit && wideMQ.matches) { stage.scrollLeft = 0; stage.scrollTop = 180; panInit = true; }
   }
+  var t = null;
+  function schedule() { if (t) clearTimeout(t); t = setTimeout(render, 100); }
 
-  function start() {
-    if (running || !animate) return;
-    running = true;
-    rafId = window.requestAnimationFrame(step);
-  }
-  function stop() {
-    running = false;
-    if (rafId) window.cancelAnimationFrame(rafId);
-    rafId = null;
-  }
+  window.addEventListener("resize", schedule);
+  window.addEventListener("load", render);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(render); }
+  render();
 
-  if (enableTrail) {
-    window.addEventListener("mousemove", function (e) {
-      for (let k = 0; k < 2; k++) {
-        trail.push({
-          x: e.clientX,
-          y: e.clientY,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: (Math.random() - 0.5) * 0.6,
-          r: Math.random() * 2 + 1,
-          life: 38,
-          max: 38,
-        });
-      }
-      // 입자 수 상한
-      if (trail.length > 180) trail.splice(0, trail.length - 180);
-    }, { passive: true });
-  }
-
-  // 탭이 보이지 않으면 렌더 정지(성능/배터리)
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) stop();
-    else start();
+  /* ---------------- 드래그-투-팬 ---------------- */
+  function interactive(el) { return el && el.closest && el.closest("a,button,input,textarea,[data-no-pan]"); }
+  var down = false, sx = 0, sy = 0, sl = 0, st = 0;
+  stage.addEventListener("pointerdown", function (e) {
+    if (!wideMQ.matches || interactive(e.target)) return;
+    down = true; sx = e.clientX; sy = e.clientY; sl = stage.scrollLeft; st = stage.scrollTop;
+    stage.classList.add("grabbing");
   });
-
-  let resizeTimer = null;
-  window.addEventListener("resize", function () {
-    if (resizeTimer) window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(resize, 150);
+  window.addEventListener("pointermove", function (e) {
+    if (!down) return;
+    stage.scrollLeft = sl - (e.clientX - sx);
+    stage.scrollTop = st - (e.clientY - sy);
   });
+  function endPan() { down = false; stage.classList.remove("grabbing"); }
+  window.addEventListener("pointerup", endPan);
+  window.addEventListener("pointercancel", endPan);
 
-  resize();
-  start();
+  /* ---------------- 이메일 복사 ---------------- */
+  var copyBtn = document.querySelector("[data-copy]");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var val = copyBtn.getAttribute("data-copy");
+      var done = function () {
+        copyBtn.classList.add("copied");
+        copyBtn.textContent = "copied ✓";
+        setTimeout(function () { copyBtn.classList.remove("copied"); copyBtn.textContent = "copy"; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(val).then(done, done);
+      } else { done(); }
+    });
+  }
 })();
